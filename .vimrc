@@ -1,40 +1,42 @@
-set nocompatible              " required
-filetype off                  " required
+" Specify a directory for plugins
+" - For Neovim: stdpath('data') . '/plugged'
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+Plug 'gmarik/Vundle.vim'
+Plug 'vim-syntastic/syntastic'
+Plug 'nvie/vim-flake8'
+Plug 'scrooloose/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'Valloric/YouCompleteMe'
+Plug 'ryanoasis/vim-devicons'
+Plug 'cocopon/pgmnt.vim'
 
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-Plugin 'vim-syntastic/syntastic'
-Plugin 'nvie/vim-flake8'
-Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-
-" add all your plugins here (note older versions of Vundle
-" used Bundle instead of Plugin)
-Bundle 'Valloric/YouCompleteMe'
-
-" ...
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
+" Initialize plugin system
+call plug#end()
 
 set encoding=utf-8
 set number
+set expandtab
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set autoindent
 syntax on
 
+let NERDTreeShowHidden=1
 let g:ycm_autoclose_preview_window_after_completion=1
-map g  :YcmCompleter GoToDefinitionElseDeclaration
+
 map ff :NERDTree<Enter>
 
+" run python file 
+command Py :! set $1 `echo "%" | sed 's/\.c//g'` ;python3 $1 "%"
+" run c file 
+command Gc !set $1 `echo "%" | sed 's/\.c//g'` ;gcc -o $1 "%" ; chmod o+x $1; "./$1"; rm "./$1"
+" run cpp file 
+command Gcc !set $1 `echo "%" | sed 's/\.c//g'` ;g++ -o $1 "%" ; chmod o+x $1; "./$1"; rm "./$1"
 
 " air-line
 let g:airline#extensions#tabline#enabled = 1
@@ -66,4 +68,3 @@ let g:airline_right_alt_sep = ''
 let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
-
