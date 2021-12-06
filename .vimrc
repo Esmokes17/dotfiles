@@ -13,6 +13,8 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'Valloric/YouCompleteMe'
 Plug 'ryanoasis/vim-devicons'
 Plug 'cocopon/pgmnt.vim'
+Plug 'morhetz/gruvbox'
+Plug 'ayu-theme/ayu-vim'
 
 " Initialize plugin system
 call plug#end()
@@ -68,3 +70,11 @@ let g:airline_right_alt_sep = ''
 let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
+
+autocmd vimenter * ++nested colorscheme gruvbox
+
+set termguicolors     " enable true colors support
+"let ayucolor="light"  " for light version of theme
+"let ayucolor="mirage" " for mirage version of theme
+let ayucolor="dark"   " for dark version of theme
+colorscheme ayu
