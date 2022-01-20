@@ -1,80 +1,104 @@
-" Specify a directory for plugins
-" - For Neovim: stdpath('data') . '/plugged'
-" - Avoid using standard Vim directory names like 'plugin'
-call plug#begin('~/.vim/plugged')
-
-Plug 'gmarik/Vundle.vim'
-Plug 'vim-syntastic/syntastic'
-Plug 'nvie/vim-flake8'
-Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'Valloric/YouCompleteMe'
-Plug 'ryanoasis/vim-devicons'
-Plug 'cocopon/pgmnt.vim'
-Plug 'morhetz/gruvbox'
-Plug 'ayu-theme/ayu-vim'
-
-" Initialize plugin system
-call plug#end()
-
-set encoding=utf-8
-set number
+"-----------------------general setting----------------------"
+set syntax
+set hidden
+set nowrap
+set encoding=UTF-8
+set pumheight=10
+set ruler               "Show the cursor position all the time
+set t_Co=256
+set cursorline
+set smarttab
 set expandtab
 set tabstop=4
-set softtabstop=4
 set shiftwidth=4
+"set spell
+set relativenumber
 set autoindent
-syntax on
+set autochdir 
+set nobackup
+set nowritebackup 
+set updatetime=100
+set shortmess=T
+set cmdheight=2
 
-let NERDTreeShowHidden=1
-let g:ycm_autoclose_preview_window_after_completion=1
+"-----------------------------Plug----------------------------"
+call plug#begin()
+Plug 'SirVer/ultisnips'         "snippets engine
+Plug 'honza/vim-snippets'       "snippets
+Plug 'scrooloose/nerdtree'      "nerd three
+Plug 'mhinz/vim-startify'       "quick start page
+Plug 'KabbAmine/vCoolor.vim'    "color picker
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+Plug 'rbong/vim-flog'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'cdelledonne/vim-cmake'
+Plug 'ryanoasis/vim-devicons'   "vim icon
+Plug 'ajmwagar/vim-deus'        "theme
+call plug#end()
 
-map ff :NERDTree<Enter>
+"--------------------------Plugin setting----------------------"
 
-" run python file 
-command Py :! set $1 `echo "%" | sed 's/\.c//g'` ;python3 $1 "%"
-" run c file 
-command Gc !set $1 `echo "%" | sed 's/\.c//g'` ;gcc -o $1 "%" ; chmod o+x $1; "./$1"; rm "./$1"
-" run cpp file 
-command Gcc !set $1 `echo "%" | sed 's/\.c//g'` ;g++ -o $1 "%" ; chmod o+x $1; "./$1"; rm "./$1"
+" snippets
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
-" air-line
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
+"----------------------------Themes----------------------------"
+set background=dark    " Setting dark mode
+colorscheme deus
+let g:deus_termcolors=256
 
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
+"----------------------------Keymaps---------------------------"
+" move split panes to left/bottom/top/right
+nnoremap <A-h> <C-W>H
+nnoremap <A-j> <C-W>J
+nnoremap <A-k> <C-W>K
+nnoremap <A-l> <C-W>L
 
-" unicode symbols
-let g:airline_left_sep = '»'
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '«'
-let g:airline_right_sep = '◀'
-let g:airline_symbols.linenr = '␊'
-let g:airline_symbols.linenr = '␤'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-let g:airline_symbols.paste = 'ρ'
-let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.paste = '∥'
-let g:airline_symbols.whitespace = 'Ξ'
+" move between panes to left/bottom/top/right
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
-" airline symbols
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = ''
+" Press i to enter insert mode, and ii to exit insert mode.
+inoremap ii <Esc>
+inoremap jk <Esc>
+inoremap kj <Esc>
+vnoremap jk <Esc>
+vnoremap kj <Esc>
 
-autocmd vimenter * ++nested colorscheme gruvbox
+" Use alt + hjkl to resize windows
+nnoremap <M-j>    :resize -2<CR>
+nnoremap <M-k>    :resize +2<CR>
+nnoremap <M-h>    :vertical resize -2<CR>
+nnoremap <M-l>    :vertical resize +2<CR>
 
-set termguicolors     " enable true colors support
-"let ayucolor="light"  " for light version of theme
-"let ayucolor="mirage" " for mirage version of theme
-let ayucolor="dark"   " for dark version of theme
-colorscheme ayu
+" Better tabbing
+vnoremap < <gv
+vnoremap > >gv
+
+xnoremap gt gT
+
+" running code
+execute "set <M-r>=\er"
+
+autocmd FileType python map <buffer> <M-r> :w<CR>:term python3 %<CR>
+autocmd FileType python imap <buffer> <M-r> <esc>:w<CR>:term python3 %<CR>
+
+autocmd FileType cpp map <buffer> <M-r> :w<CR> :!g++ -o  %:r.out % -std=c++11 && ./%:r.out && rm ./%:r.out <CR>
+autocmd FileType cpp imap <buffer> <M-r> <esc>:w<CR> :!g++ -o  %:r.out % -std=c++11 && ./%:r.out && rm ./%:r.out <CR>
+
+autocmd FileType c map <buffer> <M-r> :w<CR> :!gcc -o  %:r.out % -std=c11 && ./%:r.out && rm ./%:r.out <CR>
+autocmd FileType c imap <buffer> <M-r> <esc>:w<CR> :!gcc -o  %:r.out % -std=c11 && ./%:r.out && rm ./%:r.out <CR>
+
+autocmd FileType javascript  map <buffer> <M-r> :w<CR>:term node %<CR>
+autocmd FileType javascript imap <buffer> <M-r> <esc>:w<CR>:term node %<CR>
+
+:autocmd FileType html  map <buffer> <M-r> :w<CR>:silent !firefox %<CR>
+:autocmd FileType html  imap <buffer> <M-r> <esc>:w<CR>:silent !firefox %<CR>
+
+autocmd FileType java map <buffer> <M-r> :w<CR> :!javac % && java -cp %:p:h %:t:r && rm ./%:r <CR>
+autocmd FileType java imap <buffer> <M-r> <esc>:w<CR> :!javac % && java -cp %:p:h %:t:r && rm ./%:r <CR>
