@@ -27,8 +27,8 @@ nnoremap <M-l>    :vertical resize +2<CR>
 nnoremap <A-J> dd$p
 nnoremap <A-K> ddk^P
 
-vnoremap <A-J> d$p
-vnoremap <A-K> dk^P
+vnoremap <A-J> :m '>+1<CR>gv=gv
+vnoremap <A-K> :m '>-2<CR>gv=gv
 
 " Better tabbing
 vnoremap < <gv
@@ -45,7 +45,7 @@ nnoremap <A-o> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 nnoremap <C-s> :w<CR>
 inoremap <C-s> <esc>:w<CR>
 
-" runnign file
+" running file
 
 autocmd FileType python map <buffer> <A-r> :w<CR>:term python3 %<CR>
 autocmd FileType python imap <buffer> <A-r> <esc>:w<CR>:term python3 %<CR>
@@ -59,8 +59,8 @@ autocmd FileType c imap <buffer> <A-r> <esc>:w<CR> :!gcc -o  %:r.out % -std=c11 
 autocmd FileType javascript  map <buffer> <A-r> :w<CR>:term node %<CR>
 autocmd FileType javascript imap <buffer> <A-r> <esc>:w<CR>:term node %<CR>
 
-:autocmd FileType html  map <buffer> <A-r> :w<CR>:silent !firefox %<CR>
-:autocmd FileType html  imap <buffer> <A-r> <esc>:w<CR>:silent !firefox %<CR>
+:autocmd FileType html  map <buffer> <A-r> :w<CR>:silent ! ./%<CR>
+:autocmd FileType html  imap <buffer> <A-r> <esc>:w<CR>:silent ! ./%<CR>
 
 autocmd FileType java map <buffer> <A-r> :w<CR> :!javac % && java -cp %:p:h %:t:r && rm ./%:r <Enter>
 autocmd FileType java imap <buffer> <A-r> <esc>:w<CR> :!javac % && java -cp %:p:h %:t:r && rm ./%:r <Enter>
@@ -71,3 +71,31 @@ inoremap [ []<Esc>ha
 inoremap " ""<Esc>ha
 inoremap ' ''<Esc>ha
 inoremap ` ``<Esc>ha
+
+" Simplification
+cnoreabbrev W! w!
+cnoreabbrev Q! q!
+cnoreabbrev Qall! qall!
+cnoreabbrev Wq wq
+cnoreabbrev Wa wa
+cnoreabbrev wQ wq
+cnoreabbrev WQ wq
+cnoreabbrev W w
+cnoreabbrev Q q
+cnoreabbrev Qall qall
+
+" Easy copy and paste
+vmap <C-c> "+yi
+vmap <C-x> "+c
+vmap <C-v> c<ESC>"+p
+imap <C-v> <ESC>"+pa
+
+
+" home page
+nnoremap <Home> :Startify
+
+" Leader
+let g:mapleader="-"
+
+nnoremap <leader>. :lcd %:p:h<CR>
+noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
