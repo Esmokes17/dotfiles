@@ -74,8 +74,9 @@
           ("M-m g b" . magit-blame)))
 
 (use-package company
+  :ensure t
   :diminish company-mode
-  :hook ('after-init-hook 'global-company-mode)
+  :init (add-hook 'after-init-hook 'global-company-mode)
   :custom
   (company-global-modes '(not shell-mode eaf-mode)))
 
@@ -383,6 +384,8 @@ These are packages which are neither contained in
              unless (memq p needed)
              collect p)))
 
+;; (whitespace-mode 1)
+
 ;; TODO: delete
 (defun save-buffer-without-tabs ()
   (interactive)
@@ -425,7 +428,7 @@ These are packages which are neither contained in
  '(custom-safe-themes
    '("3d2e532b010eeb2f5e09c79f0b3a277bfc268ca91a59cdda7ffd056b868a03bc" default))
  '(package-selected-packages
-   '(python-mode rainbow-delimiters ansi-color yasnippet-snippets use-package pyenv-mode pamparam multiple-cursors magit gruber-darker-theme async))
+   '(comapny python-mode rainbow-delimiters ansi-color yasnippet-snippets use-package pyenv-mode pamparam multiple-cursors magit gruber-darker-theme async))
  '(warning-suppress-log-types '((use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
