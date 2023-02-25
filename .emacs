@@ -49,6 +49,13 @@
 ;; Large file warning
 (setq large-file-warning-threshold (* 15 1024 1024))
 
+;; Fix bug ownership server in windows
+;; from https://stackoverflow.com/a/1313577
+(require 'server)
+(and (eq window-system 'w32)
+     (>= emacs-major-version 23)
+     (defun server-ensure-safe-dir (dir) "Noop" t))
+
 ;------------- Package -------------
 ;; init package manager
 (require 'package)
