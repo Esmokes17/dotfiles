@@ -169,6 +169,14 @@
 
 
 ;------------- Functions -------------
+;; from https://emacs.stackexchange.com/a/29877
+(defun sizeof-region ()
+  (interactive)
+  (let ((strg  (if (use-region-p)
+                   (buffer-substring-no-properties (region-beginning) (region-end))
+                 "")))
+    (message "Region has %d bytes" (string-bytes strg))))
+
 ;; from https://sriramkswamy.github.io/dotemacs/
 (defun comment-or-uncomment-region-or-line ()
     "Comments or uncomments the region or the current line if there's no active region."
