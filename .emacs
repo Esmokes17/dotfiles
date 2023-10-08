@@ -1,5 +1,5 @@
 ;; NOTE: Almost all functions and configs are inspired or copy-pasted from the internet. They are not mine.
-;; I've tried to put all the links which are refrenced but I forgot some of them. Sorry.  
+;; I've tried to put all the links which are refrenced but I forgot some of them. Sorry.
 
 ;------------- UI -------------
 ;; Don't show splash screen
@@ -20,6 +20,9 @@
 
 ;; Flash when the bell rings
 (setq visible-bell t)
+
+;; Theme
+(load-theme 'almost-mono-black t nil)
 
 ;; Font
 (set-frame-font "Iosevka Fixed Bold 12" nil t)
@@ -49,12 +52,35 @@
 ;; Large file warning
 (setq large-file-warning-threshold (* 15 1024 1024))
 
+;; Whitespace mode
+(require 'whitespace)
+(global-whitespace-mode t)
+(setq whitespace-line-column 120)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(whitespace-big-indent ((t nil)))
+ '(whitespace-empty ((t (:extend t))))
+ '(whitespace-hspace ((t (:foreground "#282828"))))
+ '(whitespace-indentation ((t (:foreground "#282828"))))
+ '(whitespace-line ((t (:background "#FF4f58" :foreground "white"))))
+ '(whitespace-newline ((t nil)))
+ '(whitespace-space ((t (:foreground "#282828"))))
+ '(whitespace-space-after-tab ((t (:foreground "#282828"))))
+ '(whitespace-space-before-tab ((t (:foreground "#282828")))))
+(setq-default indent-tabs-mode nil)
+
+(delete-selection-mode 1)      ;; when writing over selection, to replace
+
 ;; Fix bug ownership server in windows
 ;; from https://stackoverflow.com/a/1313577
 (require 'server)
 (and (eq window-system 'w32)
      (>= emacs-major-version 23)
      (defun server-ensure-safe-dir (dir) "Noop" t))
+
 
 ;------------- Package -------------
 ;; init package manager
@@ -86,6 +112,7 @@
   :init (add-hook 'after-init-hook 'global-company-mode)
   :custom
   (company-global-modes '(not shell-mode eaf-mode)))
+(add-to-list 'company-backends 'company-c-headers)
 
 (use-package rainbow-delimiters
   :ensure t
@@ -95,13 +122,16 @@
   :ensure nil
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
-  :custom ((dired-listing-switches "-agho --group-directories-first")))
+  :custom (
+           (dired-listing-switches "-agho --group-directories-first")
+           ((dired-dwim-target t)))
+  )
 
 (use-package async
   :ensure t
   :commands (async-start)
   :config (async-bytecomp-package-mode 1))
-(autoload 'dired-async-mode "dired-async.el" nil t)   
+(autoload 'dired-async-mode "dired-async.el" nil t)
 (dired-async-mode 1)
 
 (eval-after-load "dired" '(progn
@@ -123,7 +153,7 @@
          ))
 
 (use-package ansi-color
-    :hook (compilation-filter . ansi-color-compilation-filter)) 
+    :hook (compilation-filter . ansi-color-compilation-filter))
 
 ; Python
 (use-package python-mode
@@ -137,6 +167,7 @@
 
 ; C/C++
 (setq auto-mode-alist (cons '("\\.h$" . c++-mode) auto-mode-alist))
+(setq-default c-basic-offset 4)
 (defconst my-cc-style
   '("cc-mode"
     (c-offsets-alist . ((innamespace . [0])))))
@@ -167,6 +198,12 @@
   (compile
    (concat "g++ -Wall -g -std=c++17 " (buffer-file-name) " -o " (file-name-sans-extension buffer-file-name) ".out")))
 
+;; Haskell
+(use-package haskell-mode
+  :ensure t)
+
+;; (use-package cmake-mode
+;;  :ensure t)
 
 ;------------- Functions -------------
 ;; from https://emacs.stackexchange.com/a/29877
@@ -399,13 +436,24 @@ These are packages which are neither contained in
              unless (memq p needed)
              collect p)))
 
-;; (whitespace-mode 1)
-
 ;; TODO: delete
 (defun save-buffer-without-tabs ()
   (interactive)
   (untabify (point-min) (point-max))
   (save-buffer))
+
+;; https://rb.gy/xp4hk
+(defun insert-date ()
+  "Insert today's date at point"
+  (interactive "*")
+  (insert (format-time-string "%F")))
+
+;; https://stackoverflow.com/a/14189981
+(defun newline-without-break-of-line ()
+  (interactive)
+  (let ((oldpos (point)))
+    (end-of-line)
+    (newline-and-indent)))
 
 ;------------- Bind Keys -------------
 (bind-keys*
@@ -425,7 +473,11 @@ These are packages which are neither contained in
   ("C-M-+"      . default-text-scale-increase)
   ("M-\]"       . tab-region)
   ("M-\["       . untab-region)
-  ("M-m g B"    . browse-current-file))
+  ("M-m g B"    . browse-current-file)
+  ("C-c s"      . isearch-forward-symbol-at-point)
+  ("C-c d"      . insert-date)
+  ("C-c b"      . browse-url)
+  ("C-<return>"  . newline-without-break-of-line))
 
 ;; Open .emacs file quickly
 ;; TODO: add to list of bind keys
@@ -435,19 +487,8 @@ These are packages which are neither contained in
 
 
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(gruber-darker))
- '(custom-safe-themes
-   '("3d2e532b010eeb2f5e09c79f0b3a277bfc268ca91a59cdda7ffd056b868a03bc" default))
  '(package-selected-packages
-   '(comapny python-mode rainbow-delimiters ansi-color yasnippet-snippets use-package pyenv-mode pamparam multiple-cursors magit gruber-darker-theme async))
- '(warning-suppress-log-types '((use-package))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+   '(almost-mono-themes glsl-mode yaml-mode emacsql-sqlite-builtin cmake-mode ein django-theme haskell-mode lsp-mode lsp-python-ms company python-mode rainbow-delimiters ansi-color yasnippet-snippets use-package pyenv-mode pamparam multiple-cursors magit gruber-darker-theme async))
+ '(warning-suppress-log-types '((use-package)))
+ '(whitespace-style
+   '(face trailing tabs spaces lines newline missing-newline-at-eof empty indentation space-after-tab space-before-tab space-mark tab-mark)))
