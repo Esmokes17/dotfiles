@@ -1,4 +1,4 @@
-;; NOTE: Almost all functions and configs are inspired or copy-pasted from the internet. They are not mine.
+﻿;; NOTE: Almost all functions and configs are inspired or copy-pasted from the internet. They are not mine.
 ;; I've tried to put all the links which are refrenced but I forgot some of them. Sorry.
 
 ;------------- UI -------------
@@ -22,6 +22,7 @@
 (setq visible-bell t)
 
 ;; Theme
+(setf custom-safe-themes t)
 (load-theme 'almost-mono-black t nil)
 
 ;; Font
@@ -81,6 +82,21 @@
      (>= emacs-major-version 23)
      (defun server-ensure-safe-dir (dir) "Noop" t))
 
+
+(display-battery-mode +1)
+(setq display-time-day-and-date t)
+(display-time)
+
+(setq user-full-name    "Mahdi"
+      user-mail-address "esmokes17@gmail.com")
+
+(defun display-startup-echo-area-message ()
+  "The message that is shown after ‘user-init-file’ is loaded."
+  (message
+      (concat "Welcome "      user-full-name
+              "! Emacs "      emacs-version
+              "/"             (system-name)
+              "; Time "       (emacs-init-time))))
 
 ;------------- Package -------------
 ;; init package manager
@@ -455,6 +471,13 @@ These are packages which are neither contained in
     (end-of-line)
     (newline-and-indent)))
 
+;; https://stackoverflow.com/a/22480022
+(defun copy-line ()
+  (interactive)
+  (kill-ring-save (point-at-bol) (point-at-eol))
+  (message "line copied"))
+
+
 ;------------- Bind Keys -------------
 (bind-keys*
   ("C-x 3"      . split-below-and-move)
@@ -477,6 +500,7 @@ These are packages which are neither contained in
   ("C-c s"      . isearch-forward-symbol-at-point)
   ("C-c d"      . insert-date)
   ("C-c b"      . browse-url)
+  ("C-c c"      . copy-line)
   ("C-<return>"  . newline-without-break-of-line))
 
 ;; Open .emacs file quickly
