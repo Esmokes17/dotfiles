@@ -37,22 +37,37 @@
         "[Minimal]": {
             "textMateRules": [
                 {
-                    "scope": "storage.type",
-                    "settings": {
-                        "fontStyle": "bold",
-                        "foreground": "#ffdd33"
-                    }
-                },
-                {
                     "scope": "keyword",
                     "settings": {
                         "fontStyle": "bold",
-                        "foreground": "#ffdd33"
+                        "foreground": "#FFC849"
                     }
                 },
+                {
+                    "scope": "storage",
+                    "settings": {
+                        "fontStyle": "bold",
+                        "foreground": "#FFC849"
+                    }
+                },
+                {
+                    "scope": "constant.language",
+                    "settings": {
+                        "fontStyle": "bold",
+                        "foreground": "#FFC849"
+                    }
+                },
+                {
+                    "scope": "support.class.builtin",
+                    "settings": {
+                        "fontStyle": "bold",
+                        "foreground": "#FFC849"
+                    }
+                }
             ]
         },
     },
+    "editor.suggestSelection": "first",
     "hexeditor.showDecodedText": true,
     "hexeditor.defaultEndianness": "little",
     "hexeditor.inspectorType": "aside",
@@ -60,4 +75,6 @@
     "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyFunction": true,
     "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyType": true,
     "C_Cpp.vcFormat.space.betweenEmptyBraces": true,
+    "files.autoGuessEncoding": true,
+    "notebook.output.wordWrap": true,
 }
